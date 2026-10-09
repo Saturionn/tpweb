@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000'; // Remplacez par l'URL de votre API si besoin
+const API_BASE_URL = 'http://localhost:8080'; // Remplacez par l'URL de votre API si besoin
 
 export const apiService = {
     // Récupérer la liste des tickets avec support des filtres (status, priority, title, page)
