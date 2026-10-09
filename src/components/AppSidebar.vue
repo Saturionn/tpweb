@@ -6,7 +6,7 @@
 
     <div class="p-6 h-20 flex items-center border-b border-slate-700/50">
       <router-link to="/" class="text-2xl font-bold text-indigo-400 tracking-tight">
-        🐛 BugTracker
+        BugTracker
       </router-link>
     </div>
 
