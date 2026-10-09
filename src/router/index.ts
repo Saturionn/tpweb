@@ -18,7 +18,7 @@ const routes = [
         path: '/tickets/:id',
         name: 'TicketDetail',
         component: TicketDetailView,
-        props: true // Permet de passer l'ID directement en tant que prop dans le composant
+        props: true
     }
 ];
 

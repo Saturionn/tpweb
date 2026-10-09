@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Ticket } from '../models/Ticket.ts';
 
-// On définit la prop 'ticket' en utilisant notre DTO
 defineProps<{
   ticket: Ticket;
 }>();
@@ -10,7 +9,6 @@ defineProps<{
 <template>
   <div class="bg-white rounded-lg shadow-md p-5 border border-gray-100 flex flex-col justify-between hover:shadow-lg transition">
     <div>
-      <!-- En-tête de la carte avec la priorité et le statut -->
       <div class="flex justify-between items-center mb-3">
         <span :class="['px-2.5 py-1 rounded-full text-xs font-semibold border', ticket.priorityBadgeClass]">
           {{ ticket.priority.toUpperCase() }}
@@ -25,7 +23,6 @@ defineProps<{
       <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ ticket.description }}</p>
     </div>
 
-    <!-- Bouton d'action pour voir les détails -->
     <div class="pt-4 border-t border-gray-100 flex justify-end">
       <router-link
           :to="{ name: 'TicketDetail', params: { id: ticket.id } }"

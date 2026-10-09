@@ -15,7 +15,6 @@ export class Ticket {
         this.createdAt = data.createdAt || new Date().toISOString();
     }
 
-    // Getter pour le style CSS de la priorité (exigé par l'énoncé)
     get priorityBadgeClass(): string {
         switch (this.priority) {
             case 'high':
@@ -28,7 +27,6 @@ export class Ticket {
         }
     }
 
-    // Getter pour afficher un statut en français lisible
     get statusLabel(): string {
         const labels: Record<string, string> = {
             open: 'Ouvert',

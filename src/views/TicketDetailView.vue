@@ -2,8 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { apiService } from '../services/api';
-import { Ticket } from '../models/Ticket.ts';
-import AppHeader from '../components/AppHeader.vue';
+import { Ticket } from '../models/Ticket';
+import AppSidebar from '../components/AppSidebar.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -14,7 +14,6 @@ const loading = ref<boolean>(true);
 const errorMessage = ref<string>('');
 const successMessage = ref<string>('');
 
-// Champs éditables pour le formulaire de mise à jour (PATCH)
 const selectedStatus = ref<string>('');
 const selectedPriority = ref<string>('');
 
@@ -39,7 +38,6 @@ const handleUpdate = async () => {
     errorMessage.value = '';
     successMessage.value = '';
 
-    // Envoi de la requête PATCH avec l'en-tête spécifique géré dans le service api.ts
     await apiService.updateTicket(ticketId, {
       status: selectedStatus.value,
       priority: selectedPriority.value
@@ -72,98 +70,97 @@ onMounted(loadTicket);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <AppHeader />
+  <div class="min-h-screen bg-slate-50 flex">
 
-    <main class="max-w-3xl mx-auto px-4 py-8">
-      <!-- Navigation retour et suppression -->
-      <div class="mb-6 flex justify-between items-center">
-        <router-link to="/" class="text-indigo-600 hover:underline text-sm font-medium">
-          ← Retour au tableau de bord
-        </router-link>
-        <button
-            @click="handleDelete"
-            class="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-medium hover:bg-red-100 transition"
-        >
-          Supprimer le ticket
-        </button>
-      </div>
+    <!-- Sidebar -->
+    <AppSidebar />
 
-      <!-- Chargement -->
-      <div v-if="loading" class="text-center py-16 text-gray-500">
-        Chargement des détails...
-      </div>
+    <main class="flex-1 ml-64 p-8 md:p-12">
+      <div class="max-w-3xl mx-auto">
 
-      <!-- Erreur -->
-      <div v-else-if="errorMessage && !ticket" class="bg-red-50 text-red-600 p-4 rounded-lg text-sm">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Contenu du ticket -->
-      <div v-else-if="ticket" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
-
-        <!-- Messages de retour -->
-        <div v-if="successMessage" class="bg-emerald-50 text-emerald-700 p-3 rounded-lg text-sm">
-          {{ successMessage }}
+        <div class="mb-8 flex justify-between items-center">
+          <router-link to="/" class="text-indigo-600 hover:underline text-sm font-semibold flex items-center gap-2">
+            ← Retour au tableau de bord
+          </router-link>
+          <button
+              @click="handleDelete"
+              class="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-semibold hover:bg-red-100 transition shadow-sm"
+          >
+            Supprimer le ticket
+          </button>
         </div>
-        <div v-if="errorMessage" class="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+
+        <div v-if="loading" class="text-center py-24 text-slate-500">
+          Chargement des détails...
+        </div>
+
+        <div v-else-if="errorMessage && !ticket" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl text-sm font-medium">
           {{ errorMessage }}
         </div>
 
-        <div>
-          <div class="flex items-center space-x-3 mb-3">
-            <span :class="['px-2.5 py-1 rounded-full text-xs font-semibold border', ticket.priorityBadgeClass]">
-              {{ ticket.priority.toUpperCase() }}
-            </span>
-            <span class="text-xs px-2.5 py-1 bg-gray-100 rounded text-gray-600 font-medium">
-              Statut : {{ ticket.statusLabel }}
-            </span>
+        <div v-else-if="ticket" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-8">
+
+          <div v-if="successMessage" class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-xl text-sm font-medium">
+            {{ successMessage }}
           </div>
-          <h1 class="text-2xl font-bold text-slate-800">{{ ticket.title }}</h1>
-        </div>
+          <div v-if="errorMessage" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl text-sm font-medium">
+            {{ errorMessage }}
+          </div>
 
-        <div>
-          <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Description</h3>
-          <p class="text-gray-700 bg-gray-50 p-4 rounded-lg whitespace-pre-line border border-gray-100 text-sm leading-relaxed">
-            {{ ticket.description }}
-          </p>
-        </div>
+          <div>
+            <div class="flex items-center space-x-3 mb-4">
+              <span :class="['px-3 py-1 rounded-full text-xs font-bold border shadow-xs', ticket.priorityBadgeClass]">
+                {{ ticket.priority.toUpperCase() }}
+              </span>
+              <span class="text-xs px-3 py-1 bg-slate-100 rounded-full text-slate-600 font-semibold">
+                Statut : {{ ticket.statusLabel }}
+              </span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-950 tracking-tight">{{ ticket.title }}</h1>
+          </div>
 
-        <!-- Section de modification (PATCH) -->
-        <div class="border-t border-gray-100 pt-6">
-          <h3 class="text-md font-bold text-slate-800 mb-4">Modifier le statut ou la priorité</h3>
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Description</h3>
+            <p class="text-slate-700 bg-slate-50 p-5 rounded-xl border border-slate-100 text-sm leading-relaxed whitespace-pre-line">
+              {{ ticket.description }}
+            </p>
+          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Statut</label>
-              <select v-model="selectedStatus" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-white outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="open">Ouvert</option>
-                <option value="in_progress">En cours</option>
-                <option value="resolved">Résolu</option>
-              </select>
+          <div class="border-t border-slate-100 pt-8">
+            <h3 class="text-lg font-bold text-slate-900 mb-6">Modifier le statut ou la priorité</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div class="space-y-1">
+                <label class="block text-sm font-semibold text-slate-700">Statut</label>
+                <select v-model="selectedStatus" class="w-full border border-slate-200 rounded-xl p-3.5 text-sm bg-white focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 outline-none transition">
+                  <option value="open">Ouvert</option>
+                  <option value="in_progress">En cours</option>
+                  <option value="resolved">Résolu</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-sm font-semibold text-slate-700">Priorité</label>
+                <select v-model="selectedPriority" class="w-full border border-slate-200 rounded-xl p-3.5 text-sm bg-white focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 outline-none transition">
+                  <option value="low">Faible</option>
+                  <option value="medium">Moyenne</option>
+                  <option value="high">Haute</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Priorité</label>
-              <select v-model="selectedPriority" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-white outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="low">Faible</option>
-                <option value="medium">Moyenne</option>
-                <option value="high">Haute</option>
-                <option value="urgent">Urgent</option>
-              </select>
+            <div class="flex justify-end">
+              <button
+                  @click="handleUpdate"
+                  class="px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-500 transition shadow-sm"
+              >
+                Enregistrer les modifications
+              </button>
             </div>
           </div>
 
-          <div class="flex justify-end">
-            <button
-                @click="handleUpdate"
-                class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition"
-            >
-              Enregistrer les modifications
-            </button>
-          </div>
         </div>
-
       </div>
     </main>
   </div>

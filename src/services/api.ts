@@ -1,7 +1,7 @@
-const API_BASE_URL = 'http://localhost:8080'; // Remplacez par l'URL de votre API si besoin
+const API_BASE_URL = 'http://localhost:8080';
 
 export const apiService = {
-    // Récupérer la liste des tickets avec support des filtres (status, priority, title, page)
+    // Récupérer la liste des tickets avec support des filtres
     async getTickets(params: Record<string, any> = {}) {
         const query = new URLSearchParams(params).toString();
         const response = await fetch(`${API_BASE_URL}/api/tickets?${query}`);
@@ -27,7 +27,7 @@ export const apiService = {
         return await response.json();
     },
 
-    // Mettre à jour partiellement un ticket (PATCH avec le header obligatoire)
+    // Mettre à jour partiellement un ticket
     async updateTicket(id: string | number, updateData: Record<string, any>) {
         const response = await fetch(`${API_BASE_URL}/api/tickets/${id}`, {
             method: 'PATCH',
@@ -40,7 +40,7 @@ export const apiService = {
         return await response.json();
     },
 
-    // Supprimer un ticket (attend un code 204 en cas de succès)
+    // Supprimer un ticket
     async deleteTicket(id: string | number) {
         const response = await fetch(`${API_BASE_URL}/api/tickets/${id}`, {
             method: 'DELETE'

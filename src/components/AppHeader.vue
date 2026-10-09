@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// Pas de logique complexe ici, juste des liens router-link
 </script>
 
 <template>
